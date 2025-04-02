@@ -6,7 +6,7 @@ export default function Blog({ entries }: { entries: BlogEntry[] }) {
       {entries.map((entry, index) => (
         <div key={index} className="mb-4">
           <h1 className="text-xl font-bold">{entry.title}</h1>
-          <div>{entry.text}</div>
+          <div>{entry.text} </div>
         </div>
       ))}
     </div>

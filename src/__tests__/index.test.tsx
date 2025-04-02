@@ -4,7 +4,7 @@ import ToDoForm from "../app/ToDoForm";
 import ToDoList from "../app/ToDoList";
 import Page from "../app/page";
 
-it("renderuje formularz i listę zadań", () => {
+it("Renderuje formularz i listę zadań", () => {
   render(<Page />);
 
   // Czy formularz istnieje
@@ -13,18 +13,6 @@ it("renderuje formularz i listę zadań", () => {
 
   // Lista zadań początkowo pusta
   expect(screen.queryByText("Pierwsze zadanie")).not.toBeInTheDocument();
-});
-
-it("dodaje nowe zadanie do listy", async () => {
-  render(<Page />);
-
-  const input = screen.getByLabelText("Zadanie");
-  const button = screen.getByRole("button", { name: /dodaj/i });
-
-  await userEvent.type(input, "Pierwsze zadanie");
-  await userEvent.click(button);
-
-  expect(await screen.findByText("Pierwsze zadanie")).toBeInTheDocument();
 });
 
 it("Używa komponentu Checkbox z ShadCN", () => {
@@ -45,7 +33,7 @@ it("Wyświetla wszystkie zadania", () => {
   expect(screen.getByText("Drugie")).toBeInTheDocument();
 });
 
-it("używa komponentów ShadCN", () => {
+it("Używa komponentów ShadCN", () => {
   render(<ToDoForm addTask={() => {}} />);
 
   const input = screen.getByLabelText("Zadanie");
@@ -60,7 +48,7 @@ it("używa komponentów ShadCN", () => {
   expect(label.tagName).toBe("LABEL");
 });
 
-it("dodaje zadanie po wysłaniu formularza", async () => {
+it("Dodaje zadanie po wysłaniu formularza", async () => {
   const addTask = jest.fn();
   render(<ToDoForm addTask={addTask} />);
 

@@ -1,6 +1,15 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 
 type FormFields = {
   text: string;
@@ -20,5 +29,26 @@ export default function ToDoForm({
     form.reset();
   };
 
-  return null; // TODO: Uzupełnij komponent z użyciem ShadCN UI
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex items-end gap-3"
+      >
+        <FormField
+          name="text"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Zadanie</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Dodaj</Button>
+      </form>
+    </Form>
+  );
 }

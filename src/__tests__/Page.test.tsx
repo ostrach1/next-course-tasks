@@ -2,17 +2,20 @@ import { render, screen } from "@testing-library/react";
 import Home from "../app/page";
 
 jest.mock("@/app/blog-api", () => ({
-  getEntries: async () => [{ title: "Mocked Entry", text: "Content of entry" }],
+  getEntries: async () => [
+    { title: "Wpis z API", text: "Zawartość z backendu" },
+  ],
 }));
 
-jest.mock("../app/BlogForm", () => () => <div>Mocked BlogForm</div>);
+jest.mock("@/app/BlogForm", () => () => (
+  <div data-testid="shadcn-form">Mockowany formularz</div>
+));
 
-describe("Home Page", () => {
-  it("renders blog entries and form", async () => {
+describe("Strona główna (Home)", () => {
+  it("Renderuje komponent Blog oraz formularz", async () => {
     render(await Home());
 
-    expect(await screen.findByText("Mocked Entry")).toBeInTheDocument();
-    expect(screen.getByText("Content of entry")).toBeInTheDocument();
-    expect(screen.getByText("Mocked BlogForm")).toBeInTheDocument();
+    expect(await screen.findByText("Wpis z API")).toBeInTheDocument();
+    expect(screen.getByTestId("shadcn-form")).toBeInTheDocument();
   });
 });

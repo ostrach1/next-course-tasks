@@ -6,18 +6,25 @@ jest.mock("@/app/blog-api", () => ({
   addEntry: jest.fn(),
 }));
 
-describe("BlogForm", () => {
-  it("renders inputs and submits form", async () => {
+describe("Formularz BlogForm (ShadCN)", () => {
+  it("Renderuje pola formularza i przycisk submit", async () => {
     render(<BlogForm />);
 
     const titleInput = screen.getByLabelText("Title");
     const contentInput = screen.getByLabelText("Content");
     const submitButton = screen.getByRole("button", { name: /submit/i });
 
-    await userEvent.type(titleInput, "Test Title");
-    await userEvent.type(contentInput, "Test Content");
+    // Sprawdzenie klas ShadCN
+    expect(titleInput).toHaveClass("rounded-md");
+    expect(contentInput).toHaveClass("rounded-md");
+    expect(submitButton).toHaveClass("inline-flex");
+
+    // Wypełnienie i wysyłka formularza
+    await userEvent.type(titleInput, "Wpis testowy");
+    await userEvent.type(contentInput, "Zawartość testowa");
     await userEvent.click(submitButton);
 
+    // Po submit inputy powinny być wyczyszczone
     expect(titleInput).toHaveValue("");
     expect(contentInput).toHaveValue("");
   });

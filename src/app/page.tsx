@@ -1,18 +1,20 @@
-import Blog from "./Blog";
-import BlogForm from "./BlogForm";
-import { getEntries } from "./blog-api";
+"use client";
 
-export default async function Home() {
-  const entries = await getEntries();
+import { useState } from "react";
+import ToDoForm from "./ToDoForm";
+import ToDoList from "./ToDoList";
+
+export default function Page() {
+  const [tasks, setTasks] = useState<{ text: string; done: boolean }[]>([]);
+
+  const addTask = (text: string) => {
+    setTasks((prev) => [...prev, { text, done: false }]);
+  };
 
   return (
-    <div className="p-10">
-      <div className="w-1/2">
-        <Blog entries={entries} />
-      </div>
-      <div className="w-1/2">
-        <BlogForm />
-      </div>
+    <div className="p-5 max-w-xl mx-auto space-y-5">
+      <ToDoForm addTask={addTask} />
+      <ToDoList tasks={tasks} />
     </div>
   );
 }

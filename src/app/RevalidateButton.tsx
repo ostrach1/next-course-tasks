@@ -1,10 +1,4 @@
-"use client";
-
-export default function RevalidateButton({
-  onRevalidate,
-}: {
-  onRevalidate: () => Promise<void>;
-}) {
+export default function RevalidateButton({}) {
   return (
     <button
       onClick={async () => console.log("revalidate")}

@@ -1,10 +1,8 @@
-export const dynamic = "error";
-
 export default function Home() {
   return (
-    <main className="flex flex-col justify-center items-center h-screen">
-      <h1 className="text-2xl">Aktualny czas (z serwera)</h1>
-      <p className="text-xl mt-2">xx:xx:xx</p>
+    <main className="p-10">
+      <h1 className="text-2xl font-bold">Strona główna</h1>
+      <p>Witaj w aplikacji! Zaloguj się, aby kontynuować.</p>
     </main>
-  );
+  )
 }

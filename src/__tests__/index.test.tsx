@@ -15,6 +15,18 @@ it("Renderuje formularz i listę zadań", () => {
   expect(screen.queryByText("Pierwsze zadanie")).not.toBeInTheDocument();
 });
 
+it("Dodaje nowe zadanie do listy", async () => {
+  render(<Page />);
+
+  const input = screen.getByLabelText("Zadanie");
+  const button = screen.getByRole("button", { name: /dodaj/i });
+
+  await userEvent.type(input, "Pierwsze zadanie");
+  await userEvent.click(button);
+
+  expect(await screen.findByText("Pierwsze zadanie")).toBeInTheDocument();
+});
+
 it("Używa komponentu Checkbox z ShadCN", () => {
   const tasks = [{ text: "Zadanie", done: true }];
   render(<ToDoList tasks={tasks} />);

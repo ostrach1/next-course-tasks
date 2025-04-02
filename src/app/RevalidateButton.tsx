@@ -5,12 +5,5 @@ export default function RevalidateButton({
 }: {
   onRevalidate: () => Promise<void>;
 }) {
-  return (
-    <button
-      className="mt-4 bg-red-400 rounded-lg p-4"
-      onClick={async () => await onRevalidate()}
-    >
-      Revalidate
-    </button>
-  );
+  return <button onClick={async () => await onRevalidate()}>Revalidate</button>;
 }

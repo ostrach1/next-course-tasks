@@ -13,7 +13,7 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-test("pobiera i wyświetla zadania z API", async () => {
+test("Pobiera i wyświetla zadania z API", async () => {
   (fetch as jest.Mock).mockResolvedValueOnce({
     json: async () => mockTodos,
   });
@@ -28,7 +28,7 @@ test("pobiera i wyświetla zadania z API", async () => {
   });
 });
 
-test("dodaje nowe zadanie", async () => {
+test("Dodaje nowe zadanie", async () => {
   (fetch as jest.Mock)
     .mockResolvedValueOnce({ json: async () => ({}) })
     .mockResolvedValueOnce({ json: async () => mockTodos });
@@ -51,7 +51,7 @@ test("dodaje nowe zadanie", async () => {
   });
 });
 
-test("trwale usuwa wszystkie zadania", async () => {
+test("Trwale usuwa wszystkie zadania", async () => {
   (fetch as jest.Mock)
     .mockResolvedValueOnce({}) // DELETE
     .mockResolvedValueOnce({ json: async () => [] }); // po usunięciu

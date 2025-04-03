@@ -7,31 +7,15 @@ export default function Todos() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [title, setTitle] = useState("");
 
-  const fetchTodos = async () => {
-    const res = await fetch("/api/todos");
-    const data = await res.json();
-    setTodos(data);
-  };
+  const fetchTodos = async () => {};
 
   const addTodo = async () => {
     if (!title.trim()) return;
-    await fetch("/api/todos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title }),
-    });
-    setTitle("");
-    fetchTodos();
   };
 
-  const clearTodos = async () => {
-    await fetch("/api/todos", { method: "DELETE" });
-    fetchTodos();
-  };
+  const clearTodos = async () => {};
 
-  const resetListLocally = () => {
-    setTodos([]);
-  };
+  const resetListLocally = () => {};
 
   return (
     <div>
@@ -60,28 +44,16 @@ export default function Todos() {
       />
 
       <div className="flex flex-col gap-2">
-        <button
-          onClick={fetchTodos}
-          className="bg-blue-500 text-white px-4 py-1 rounded"
-        >
+        <button className="bg-blue-500 text-white px-4 py-1 rounded">
           📥 Pobierz zadania
         </button>
-        <button
-          onClick={addTodo}
-          className="bg-green-500 text-white px-4 py-1 rounded"
-        >
+        <button className="bg-green-500 text-white px-4 py-1 rounded">
           ➕ Dodaj zadanie
         </button>
-        <button
-          onClick={clearTodos}
-          className="bg-red-600 text-white px-4 py-1 rounded"
-        >
+        <button className="bg-red-600 text-white px-4 py-1 rounded">
           🗑️ Wyczyść zadania (trwale)
         </button>
-        <button
-          onClick={resetListLocally}
-          className="bg-yellow-500 text-white px-4 py-1 rounded"
-        >
+        <button className="bg-yellow-500 text-white px-4 py-1 rounded">
           🔄 Wyczyść listę (lokalnie)
         </button>
       </div>

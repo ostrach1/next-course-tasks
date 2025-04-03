@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Todo } from "./api/todos/route";
+import { type Todo } from "../types/todo";
 
 export default function Todos() {
   const [todos, setTodos] = useState<Todo[]>([]);

@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
-
-export interface Todo {
-  id: string;
-  title: string;
-  completed: boolean;
-}
+import { type Todo } from "@/types/todo";
 
 const filePath = "todos.json";
 

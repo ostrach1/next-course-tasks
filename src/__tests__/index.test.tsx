@@ -1,63 +1,65 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import { Todo } from "@/types/todo";
-
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Todos from "../app/Todos";
+import "@testing-library/jest-dom";
 
-const mockTodos: Todo[] = [
-  { id: "1", title: "Zadanie testowe 1", completed: false },
-  { id: "2", title: "Zadanie testowe 2", completed: false },
+global.fetch = jest.fn();
+
+const mockTodos = [
+  { id: "1", title: "Zadanie 1" },
+  { id: "2", title: "Zadanie 2" },
 ];
 
-it("Po kliknięciu „Dodaj” powinno wysłać żądanie", async () => {
-  global.fetch = jest.fn(() =>
-    Promise.resolve({
-      json: () => Promise.resolve(mockTodos),
-    })
-  ) as any;
-
-  render(<Todos />);
-
-  const input = screen.getByPlaceholderText(/wpisz nazwę zadania/i);
-  fireEvent.change(input, { target: { value: "Testowe zadanie" } });
-
-  const button = screen.getByRole("button", { name: /dodaj zadanie/i });
-  fireEvent.click(button);
-
-  expect(global.fetch).toHaveBeenCalledWith("/api/todos", expect.anything());
+beforeEach(() => {
+  jest.clearAllMocks();
 });
 
-it("Po kliknięciu „Pobierz zadania” pobiera dane z API", async () => {
-  global.fetch = jest.fn(() =>
-    Promise.resolve({
-      json: () =>
-        Promise.resolve([{ id: "1", title: "Z testu", completed: false }]),
-    })
-  ) as any;
-
-  render(<Todos />);
-
-  const button = screen.getByRole("button", { name: /pobierz zadania/i });
-  fireEvent.click(button);
-
-  expect(global.fetch).toHaveBeenCalledWith("/api/todos");
-});
-
-it("Po kliknięciu „Wyczyść zadania (trwale)” wysyła DELETE", async () => {
-  global.fetch = jest.fn(() =>
-    Promise.resolve({
-      json: () => Promise.resolve({ message: "Wyczyszczono" }),
-    })
-  ) as any;
-
-  render(<Todos />);
-
-  const button = screen.getByRole("button", {
-    name: /wyczyść zadania \(trwale\)/i,
+test("pobiera i wyświetla zadania z API", async () => {
+  (fetch as jest.Mock).mockResolvedValueOnce({
+    json: async () => mockTodos,
   });
-  fireEvent.click(button);
 
-  expect(global.fetch).toHaveBeenCalledWith("/api/todos", {
-    method: "DELETE",
+  render(<Todos />);
+  fireEvent.click(screen.getByText("📥 Pobierz zadania"));
+
+  await waitFor(() => {
+    expect(screen.getByText("Zadanie 1")).toBeInTheDocument();
+    expect(screen.getByText("Zadanie 2")).toBeInTheDocument();
+    expect(screen.getByText(/Lista zadań \(2\)/)).toBeInTheDocument();
+  });
+});
+
+test("dodaje nowe zadanie", async () => {
+  (fetch as jest.Mock)
+    .mockResolvedValueOnce({ json: async () => ({}) })
+    .mockResolvedValueOnce({ json: async () => mockTodos });
+
+  render(<Todos />);
+  fireEvent.change(screen.getByPlaceholderText("Wpisz nazwę zadania"), {
+    target: { value: "Nowe zadanie" },
+  });
+  fireEvent.click(screen.getByText("➕ Dodaj zadanie"));
+
+  await waitFor(() => {
+    expect(fetch).toHaveBeenCalledWith(
+      "/api/todos",
+      expect.objectContaining({
+        method: "POST",
+      })
+    );
+    expect(fetch).toHaveBeenCalledWith("/api/todos"); // po POST – GET
+    expect(screen.getByText("Zadanie 1")).toBeInTheDocument();
+  });
+});
+
+test("trwale usuwa wszystkie zadania", async () => {
+  (fetch as jest.Mock)
+    .mockResolvedValueOnce({}) // DELETE
+    .mockResolvedValueOnce({ json: async () => [] }); // po usunięciu
+
+  render(<Todos />);
+  fireEvent.click(screen.getByText("🗑️ Wyczyść zadania (trwale)"));
+
+  await waitFor(() => {
+    expect(fetch).toHaveBeenCalledWith("/api/todos", { method: "DELETE" });
   });
 });

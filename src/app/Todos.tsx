@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { type Todo } from "./api/todos/route";
+import { useState } from "react";
+import { Todo } from "./api/todos/route";
 
 export default function Todos() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodo, setNewTodo] = useState("");
+  const [title, setTitle] = useState("");
 
   const fetchTodos = async () => {
     const res = await fetch("/api/todos");
@@ -13,50 +13,78 @@ export default function Todos() {
     setTodos(data);
   };
 
-  useEffect(() => {
-    fetchTodos();
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTodo.trim()) return;
-
+  const addTodo = async () => {
+    if (!title.trim()) return;
     await fetch("/api/todos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: newTodo }),
+      body: JSON.stringify({ title }),
     });
-
-    setNewTodo("");
+    setTitle("");
     fetchTodos();
+  };
+
+  const clearTodos = async () => {
+    await fetch("/api/todos", { method: "DELETE" });
+    fetchTodos();
+  };
+
+  const resetListLocally = () => {
+    setTodos([]);
   };
 
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">
-        Twoja lista zadań ({todos.length})
+        🧾 Lista zadań ({todos.length})
       </h2>
-      <ul className="mb-4">
-        {todos.map((todo) => (
-          <li key={todo.id} className="mb-2">
-            {todo.title}
-          </li>
-        ))}
-      </ul>
-      <form onSubmit={handleSubmit} className="flex gap-2">
-        <input
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-          className="border px-2 py-1 rounded"
-          placeholder="Nowe zadanie"
-        />
+
+      {todos.length === 0 ? (
+        <p className="mb-4 text-gray-500">Brak dostępnych zadań.</p>
+      ) : (
+        <ul className="mb-4">
+          {todos.map((todo) => (
+            <li key={todo.id} className="mb-1">
+              {todo.title}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Wpisz nazwę zadania"
+        className="border px-2 py-1 mb-2 w-full rounded"
+      />
+
+      <div className="flex flex-col gap-2">
         <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-1 rounded"
+          onClick={fetchTodos}
+          className="bg-blue-500 text-white px-4 py-1 rounded"
         >
-          Dodaj
+          📥 Pobierz zadania
         </button>
-      </form>
+        <button
+          onClick={addTodo}
+          className="bg-green-500 text-white px-4 py-1 rounded"
+        >
+          ➕ Dodaj zadanie
+        </button>
+        <button
+          onClick={clearTodos}
+          className="bg-red-600 text-white px-4 py-1 rounded"
+        >
+          🗑️ Wyczyść zadania (trwale)
+        </button>
+        <button
+          onClick={resetListLocally}
+          className="bg-yellow-500 text-white px-4 py-1 rounded"
+        >
+          🔄 Wyczyść listę (lokalnie)
+        </button>
+      </div>
     </div>
   );
 }

@@ -7,27 +7,11 @@ export default function Todos() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [title, setTitle] = useState("");
 
-  const fetchTodos = async () => {
-    const res = await fetch("/api/todos");
-    const data = await res.json();
-    setTodos(data);
-  };
+  const fetchTodos = async () => {};
 
-  const addTodo = async () => {
-    if (!title.trim()) return;
-    await fetch("/api/todos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title }),
-    });
-    setTitle("");
-    fetchTodos();
-  };
+  const addTodo = async () => {};
 
-  const clearTodos = async () => {
-    await fetch("/api/todos", { method: "DELETE" });
-    fetchTodos();
-  };
+  const clearTodos = async () => {};
 
   const resetListLocally = () => {
     setTodos([]);
